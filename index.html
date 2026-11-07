@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>ديوان الضيافة | أصيل ومميز</title>
+  
+  <!-- الخطوط والأيقونات -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100..900&family=Epilogue:wght@100..900&family=Space+Grotesk:wght@100..900&display=swap" rel="stylesheet"/>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#9a4100",
+            "primary-container": "#bd5611",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#fffbff",
+            "primary-fixed": "#ffdbcb",
+            "primary-fixed-dim": "#ffb690",
+            "secondary": "#845400",
+            "secondary-container": "#fdae3d",
+            "secondary-fixed": "#ffddb6",
+            "on-secondary-fixed": "#2a1800",
+            "tertiary": "#515f57",
+            "tertiary-container": "#6a786f",
+            "tertiary-fixed": "#d7e6db",
+            "background": "#fff8f6",
+            "surface": "#fff8f6",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f9f2f0",
+            "surface-container": "#f3ecea",
+            "surface-container-high": "#ede7e5",
+            "surface-container-highest": "#e7e1df",
+            "on-surface": "#1d1b1a",
+            "on-surface-variant": "#574238",
+            "outline": "#8a7267",
+            "outline-variant": "#ddc1b3",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6"
+          },
+          spacing: {
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2.5rem",
+            "margin": "2.5rem",
+            "gutter": "1.5rem"
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- ملف التنسيق المخصص -->
+  <link rel="stylesheet" href="css/style.css"/>
+
+  <!-- مكتبات Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js"></script>
+
+  <!-- سكربتات التهيئة المشتركة -->
+  <script src="js/firebase-config.js"></script>
+  <script src="js/menu-data.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/navbar.js"></script>
+</head>
+<body class="bg-background font-body-md text-on-surface antialiased min-h-screen flex flex-col">
+
+  <!-- ==================== رأس الصفحة (Header) ==================== -->
+  <header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_2px_12px_rgba(29,27,26,0.05)]">
+    <div class="h-28 w-full px-4 md:px-margin flex flex-col justify-between py-space-sm">
+      <div class="flex items-center justify-between gap-gutter">
+        
+        <!-- الشعار واسم المطعم -->
+        <div class="flex items-center gap-space-md">
+          <a href="index.html" class="flex items-center gap-space-sm cursor-pointer">
+            <div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary shadow-sm">
+              <span class="material-symbols-outlined text-[22px]">restaurant</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-headline-sm text-headline-sm text-primary tracking-tight font-bold">ديوان الضيافة</span>
+              <span class="font-label-sm text-label-sm text-on-surface-variant">أصيل ومميز</span>
+            </div>
+          </a>
+
+          <!-- موقع التوصيل -->
+          <div class="hidden lg:flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high cursor-pointer transition-colors">
+            <span class="material-symbols-outlined text-primary text-[18px]">location_on</span>
+            <div class="flex flex-col text-right">
+              <span class="font-label-sm text-label-sm text-on-surface font-semibold">التوصيل إلى: الرياض، العليا</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant text-xs">خلال 35 - 45 دقيقة</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- حقل البحث المباشر -->
+        <div class="flex-1 max-w-md hidden md:block">
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute right-space-sm text-outline pointer-events-none text-[20px]">search</span>
+            <input class="w-full pr-10 pl-space-md py-space-xs bg-surface-container-low rounded-full border-0 text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/20 text-body-sm font-body-md" 
+                   placeholder="ابحث عن المشاوي، المقبلات، أو الأطباق المفضلة..." type="search"/>
+          </div>
+        </div>
+
+        <!-- أدوات الهيدر (هاتف، سلة، حساب) -->
+        <div class="flex items-center gap-space-sm">
+          <a class="hidden xl:flex items-center gap-space-xs px-space-sm py-space-xs rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-md text-label-md font-bold" href="tel:920000000">
+            <span class="material-symbols-outlined text-[18px]">call</span>
+            <span dir="ltr">9200 00000</span>
+          </a>
+
+          <!-- زر السلة المباشر -->
+          <button id="headerCartBtn" class="flex items-center gap-space-sm bg-primary hover:bg-primary-container text-on-primary px-space-md py-space-xs rounded-full shadow-[0_4px_16px_rgba(154,65,0,0.25)] active:scale-[0.98] transition-all cursor-pointer">
+            <div class="relative flex items-center justify-center">
+              <span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+              <span class="cart-badge-count absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-secondary text-on-secondary font-label-sm text-[10px] flex items-center justify-center font-bold">0</span>
+            </div>
+            <div class="flex items-center gap-space-xs font-label-md text-label-md">
+              <span class="hidden sm:inline font-bold">السلة</span>
+              <span class="opacity-80">|</span>
+              <span class="cart-header-total font-semibold" dir="ltr">0 ج.م</span>
+            </div>
+          </button>
+
+          <!-- زر الحساب وتسجيل الدخول المرتبط بفيربيز -->
+          <div id="navbarUserProfile" class="flex items-center gap-space-xs pr-space-xs">
+            <a href="auth.html" class="flex items-center gap-space-xs px-space-sm py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors">
+              <span class="material-symbols-outlined text-[18px] text-primary">account_circle</span>
+              <span class="hidden sm:inline font-semibold">دخول / حسابي</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- روابط الصفحات الرئيسية المتصلة -->
+      <nav class="flex items-center gap-space-xs overflow-x-auto py-space-xs scrollbar-none">
+        <a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all whitespace-nowrap" href="index.html">الرئيسية</a>
+        <a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all whitespace-nowrap" href="cart.html">السلة وإتمام الطلب</a>
+        <a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all whitespace-nowrap" href="track.html">تتبع الطلب</a>
+        <a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all whitespace-nowrap" href="orders.html">طلبات العملاء</a>
+        <a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all whitespace-nowrap" href="auth.html">حسابي وسجل الطلبات</a>
+        <a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-primary font-bold hover:bg-surface-container transition-all whitespace-nowrap flex items-center gap-1" href="admin.html">
+          <span class="material-symbols-outlined text-[16px]">admin_panel_settings</span>
+          <span>لوحة المطبخ</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ==================== المحتوى الرئيسي (Main) ==================== -->
+  <main class="w-full pt-28 flex-1">
+    
+    <!-- شريط العرض الترويجي العلوي والكوبون -->
+    <section class="w-full px-4 md:px-margin py-space-md">
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-l from-primary via-primary-container to-secondary text-on-primary shadow-xl">
+        <div class="absolute -left-12 -top-12 w-64 h-64 bg-secondary-container/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -right-8 -bottom-8 w-56 h-56 bg-primary-fixed/20 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between p-space-lg md:p-space-xl gap-space-lg">
+          <div class="flex flex-col gap-space-xs text-right max-w-2xl">
+            <div class="inline-flex items-center gap-space-xs self-start px-space-sm py-space-xs rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm shadow-sm font-bold">
+              <span class="material-symbols-outlined text-[16px] text-secondary">local_fire_department</span>
+              <span>عرض ديوان الخاص لليوم</span>
+            </div>
+            <h2 class="font-headline-lg text-2xl md:text-3xl text-surface-container-lowest font-bold">
+              خصم ٢٠٪ على كافة صواني المشاوي والأطباق العائلية
+            </h2>
+            <p class="font-body-md text-body-md text-surface-container-low max-w-xl">
+              استمتع بأشهى كباب وكفتة على الفحم متبلة بخلطة التوابل النجدية الأصيلة مع طحينة وخبز تنور طازج.
+            </p>
+          </div>
+          <div class="flex flex-col sm:flex-row items-center gap-space-md bg-surface-container-lowest/15 backdrop-blur-md p-space-md rounded-xl">
+            <div class="flex flex-col text-center">
+              <span class="font-label-sm text-label-sm text-surface-container-low opacity-90">استخدم الكوبون</span>
+              <span class="font-display-lg-mobile text-headline-sm font-bold tracking-widest text-surface-container-lowest uppercase" dir="ltr">NAKHA20</span>
+            </div>
+            <button class="flex items-center gap-space-xs px-space-md py-space-sm bg-surface-container-lowest text-primary hover:bg-surface-container rounded-full font-label-md text-label-md transition-all shadow-md active:scale-95 cursor-pointer font-bold" id="copyBtn" onclick="copyCouponCode('NAKHA20')">
+              <span class="material-symbols-outlined text-[18px]">content_copy</span>
+              <span>نسخ الكود</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- شريط تصنيفات الأطعمة التفاعلي -->
+    <section class="sticky top-28 z-30 w-full px-4 md:px-margin py-space-sm bg-surface/90 backdrop-blur-md shadow-sm">
+      <div class="flex items-center justify-between gap-space-md overflow-x-auto pb-space-xs scrollbar-none">
+        <div class="flex items-center gap-space-xs" id="categoryFilterContainer">
+          <button class="category-btn px-space-lg py-space-xs rounded-full font-label-md text-label-md bg-primary text-on-primary shadow-sm transition-all whitespace-nowrap active:scale-95 cursor-pointer flex items-center gap-space-xs" data-category="all" onclick="filterCategory('all')">
+            <span class="material-symbols-outlined text-[16px]">menu_book</span>
+            <span>الكل</span>
+          </button>
+          <button class="category-btn px-space-lg py-space-xs rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all whitespace-nowrap active:scale-95 cursor-pointer flex items-center gap-space-xs" data-category="grills" onclick="filterCategory('grills')">
+            <span class="material-symbols-outlined text-[16px]">outdoor_grill</span>
+            <span>مشاوي ووجبات</span>
+          </button>
+          <button class="category-btn px-space-lg py-space-xs rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all whitespace-nowrap active:scale-95 cursor-pointer flex items-center gap-space-xs" data-category="sandwiches" onclick="filterCategory('sandwiches')">
+            <span class="material-symbols-outlined text-[16px]">lunch_dining</span>
+            <span>برجر وساندوتشات</span>
+          </button>
+          <button class="category-btn px-space-lg py-space-xs rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all whitespace-nowrap active:scale-95 cursor-pointer flex items-center gap-space-xs" data-category="appetizers" onclick="filterCategory('appetizers')">
+            <span class="material-symbols-outlined text-[16px]">soup_kitchen</span>
+            <span>مقبلات وسلطات</span>
+          </button>
+          <button class="category-btn px-space-lg py-space-xs rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all whitespace-nowrap active:scale-95 cursor-pointer flex items-center gap-space-xs" data-category="beverages" onclick="filterCategory('beverages')">
+            <span class="material-symbols-outlined text-[16px]">local_cafe</span>
+            <span>مشروبات منعشة</span>
+          </button>
+          <button class="category-btn px-space-lg py-space-xs rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all whitespace-nowrap active:scale-95 cursor-pointer flex items-center gap-space-xs" data-category="desserts" onclick="filterCategory('desserts')">
+            <span class="material-symbols-outlined text-[16px]">bakery_dining</span>
+            <span>حلويات</span>
+          </button>
+        </div>
+        <div class="hidden lg:flex items-center gap-space-xs text-on-surface-variant text-label-sm font-label-sm whitespace-nowrap pr-space-md">
+          <span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+          <span>لحوم بلدية طازجة ١٠٠٪ يومياً</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- شبكة أطباق قائمة الطعام -->
+    <section class="w-full px-4 md:px-margin py-space-lg">
+      <div class="flex items-center justify-between mb-space-lg">
+        <div class="flex flex-col text-right">
+          <span class="font-label-sm text-label-sm text-secondary font-bold uppercase tracking-wider">قائمة الطعام المختارة</span>
+          <h3 class="font-headline-md text-2xl md:text-3xl text-on-surface font-bold">أطباق الضيافة التراثية والمعاصرة</h3>
+        </div>
+        <div class="flex items-center gap-space-xs bg-surface-container-low px-space-md py-space-xs rounded-full text-on-surface-variant font-label-md text-label-md">
+          <span>المتاح حالياً:</span>
+          <span class="font-bold text-primary" id="availableItemsCount">8 أطباق</span>
+        </div>
+      </div>
+
+      <!-- حاوية الأصناف -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-gutter" id="dishesGrid">
+        <!-- يتم رسم الأصناف ديناميكياً بواسطة js/app.js -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== درج السلة المنزلق (Slide-Over Cart Drawer) ==================== -->
+  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300" id="cartDrawerBackdrop" onclick="closeCartDrawer()"></div>
+  <aside class="fixed top-0 left-0 h-full w-full max-w-md z-50 bg-surface-container-lowest shadow-2xl transform -translate-x-full transition-transform duration-300 flex flex-col justify-between" id="cartDrawer">
+    <!-- رأس الدرج -->
+    <div class="p-space-lg bg-surface-container flex items-center justify-between border-b border-surface-container-high/60">
+      <div class="flex items-center gap-space-sm">
+        <div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined text-[20px]">shopping_basket</span>
+        </div>
+        <div class="flex flex-col text-right">
+          <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">سلة الطلبات</h3>
+          <span class="font-label-sm text-label-sm text-on-surface-variant" id="cartDrawerCount">0 عناصر مضافة</span>
+        </div>
+      </div>
+      <button class="w-9 h-9 rounded-full bg-surface-container-high hover:bg-surface-dim flex items-center justify-center text-on-surface transition-colors cursor-pointer" onclick="closeCartDrawer()">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+    </div>
+
+    <!-- قائمة العناصر بالسلة -->
+    <div class="flex-1 overflow-y-auto p-space-lg flex flex-col gap-space-md divide-y divide-surface-container-high/60" id="cartItemsList">
+      <!-- محتوى السلة يرسم ديناميكياً -->
+    </div>
+
+    <!-- تفاصيل الفاتورة وزر الدفع -->
+    <div class="p-space-lg bg-surface-container-low flex flex-col gap-space-sm shadow-md border-t border-surface-container-high/70">
+      <div class="flex items-center justify-between font-body-sm text-body-sm text-on-surface-variant">
+        <span>المجموع الفرعي:</span>
+        <span class="font-semibold text-on-surface" id="cartSubtotal">0 ج.م</span>
+      </div>
+      <div class="flex items-center justify-between font-body-sm text-body-sm text-on-surface-variant">
+        <span>رسوم التوصيل والخدمة:</span>
+        <span class="font-semibold text-on-surface" id="cartDelivery">20 ج.م</span>
+      </div>
+      <div class="flex items-center justify-between font-body-sm text-body-sm text-tertiary font-bold" id="discountRow">
+        <span>كوبون الخصم (NAKHA20):</span>
+        <span id="cartDiscount">-0 ج.م</span>
+      </div>
+      <div class="flex items-center justify-between pt-space-xs font-headline-sm text-headline-sm font-bold text-on-surface">
+        <span>الإجمالي النهائي:</span>
+        <span class="text-primary text-xl font-bold" id="cartTotal">0 ج.م</span>
+      </div>
+      
+      <div class="flex items-center gap-2 pt-2">
+        <button class="flex-1 py-space-sm rounded-full bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg font-bold flex items-center justify-center gap-space-xs shadow-lg transition-all active:scale-98 cursor-pointer disabled:opacity-50 disabled:pointer-events-none" id="checkoutBtn" onclick="openQuickCheckoutModal()">
+          <span>إتمام الطلب السريع</span>
+          <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+        </button>
+        <a href="cart.html" class="px-4 py-space-sm rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-xs font-bold transition-colors">
+          عرض الصفحة
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ==================== شريط السلة العائم للموبايل ==================== -->
+  <div class="fixed bottom-4 left-4 right-4 z-40 md:hidden bg-inverse-surface/95 backdrop-blur-lg text-inverse-on-surface p-space-md rounded-full shadow-2xl flex items-center justify-between cursor-pointer transition-transform transform translate-y-24" id="floatingCartBar" onclick="document.getElementById('headerCartBtn').click()">
+    <div class="flex items-center gap-space-sm">
+      <div class="relative flex items-center justify-center w-10 h-10 rounded-full bg-primary text-on-primary">
+        <span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+        <span class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-secondary-container text-on-secondary-fixed font-bold text-[11px] flex items-center justify-center" id="floatingCartBadge">0</span>
+      </div>
+      <div class="flex flex-col text-right">
+        <span class="font-label-sm text-xs text-surface-container-high">عرض سلة الطلب</span>
+        <span class="font-headline-sm text-headline-sm text-secondary-fixed font-bold" id="floatingCartTotal">0 ج.م</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-space-xs bg-primary text-on-primary px-space-md py-space-xs rounded-full font-label-md text-label-md font-bold">
+      <span>متابعة</span>
+      <span class="material-symbols-outlined text-[16px]">chevron_left</span>
+    </div>
+  </div>
+
+  <!-- ==================== نافذة الطلب السريع المرتبطة بـ Firebase ==================== -->
+  <div class="fixed inset-0 z-50 bg-inverse-surface/70 backdrop-blur-md hidden items-center justify-center p-space-md" id="checkoutModalBackdrop">
+    <div class="relative w-full max-w-lg bg-surface-container-lowest rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-pop-in">
+      
+      <!-- رأس المودال -->
+      <div class="p-space-lg bg-surface-container flex items-center justify-between border-b border-surface-container-high/60">
+        <div class="flex items-center gap-space-sm">
+          <div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-[22px]">rocket_launch</span>
+          </div>
+          <div class="flex flex-col text-right">
+            <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">إتمام الطلب السريع</h3>
+            <span class="font-label-sm text-label-sm text-on-surface-variant">حفظ فوري في Firebase وتأكيد مباشر</span>
+          </div>
+        </div>
+        <button class="w-8 h-8 rounded-full bg-surface-container-high hover:bg-surface-dim flex items-center justify-center text-on-surface cursor-pointer" onclick="closeQuickCheckoutModal()">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+
+      <!-- استمارة الطلب السريع -->
+      <form class="p-space-lg flex flex-col gap-space-md text-right max-h-[75vh] overflow-y-auto" id="quickOrderForm" onsubmit="handleQuickOrderSubmit(event)">
+        <!-- ملخص القيمة -->
+        <div class="p-space-md bg-surface-container-low rounded-xl flex items-center justify-between">
+          <div class="flex flex-col">
+            <span class="font-label-sm text-label-sm text-outline">ملخص القيمة المستحقة</span>
+            <span class="font-headline-sm text-headline-sm text-primary font-bold text-xl" id="modalSummaryTotal">0 ج.م</span>
+          </div>
+          <span class="font-label-md text-xs px-space-sm py-space-xs rounded-full bg-secondary-fixed text-on-secondary-fixed font-bold">الدفع عند الاستلام متاح</span>
+        </div>
+
+        <!-- الاسم -->
+        <div class="flex flex-col gap-1">
+          <label class="font-label-sm text-label-sm font-semibold text-on-surface">الاسم بالكامل *</label>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute right-space-sm text-outline pointer-events-none text-[18px]">person</span>
+            <input class="w-full pr-10 pl-space-md py-space-sm bg-surface-container-low rounded-xl text-body-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20" id="custName" placeholder="أدخل اسمك الثلاثي" required="" type="text"/>
+          </div>
+        </div>
+
+        <!-- رقم الهاتف -->
+        <div class="flex flex-col gap-1">
+          <label class="font-label-sm text-label-sm font-semibold text-on-surface">رقم الهاتف الجوال (واتساب) *</label>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute right-space-sm text-outline pointer-events-none text-[18px]">phone_iphone</span>
+            <input class="w-full pr-10 pl-space-md py-space-sm bg-surface-container-low rounded-xl text-body-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 text-right" dir="ltr" id="custPhone" placeholder="01X XXXX XXXX" required="" type="tel"/>
+          </div>
+        </div>
+
+        <!-- عنوان التوصيل -->
+        <div class="flex flex-col gap-1">
+          <label class="font-label-sm text-label-sm font-semibold text-on-surface">عنوان التوصيل بالتفصيل *</label>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute right-space-sm top-space-sm text-outline pointer-events-none text-[18px]">pin_drop</span>
+            <textarea class="w-full pr-10 pl-space-md py-space-sm bg-surface-container-low rounded-xl text-body-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20" id="custAddress" placeholder="المدينة، الحي، اسم الشارع، رقم العمارة والدور والشقة" required="" rows="2"></textarea>
+          </div>
+        </div>
+
+        <!-- طريقة الدفع -->
+        <div class="flex flex-col gap-space-xs">
+          <label class="font-label-sm text-label-sm font-semibold text-on-surface">طريقة الدفع المفضلة</label>
+          <div class="grid grid-cols-3 gap-space-xs">
+            <label class="flex flex-col items-center justify-center p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container cursor-pointer transition-all has-[:checked]:bg-primary-fixed has-[:checked]:text-on-primary-fixed">
+              <input checked="" class="hidden" name="paymentMethod" type="radio" value="cash"/>
+              <span class="material-symbols-outlined text-[20px]">payments</span>
+              <span class="font-label-sm text-xs mt-1">كاش عند الاستلام</span>
+            </label>
+            <label class="flex flex-col items-center justify-center p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container cursor-pointer transition-all has-[:checked]:bg-primary-fixed has-[:checked]:text-on-primary-fixed">
+              <input class="hidden" name="paymentMethod" type="radio" value="card"/>
+              <span class="material-symbols-outlined text-[20px]">credit_card</span>
+              <span class="font-label-sm text-xs mt-1">فيزا / كارت</span>
+            </label>
+            <label class="flex flex-col items-center justify-center p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container cursor-pointer transition-all has-[:checked]:bg-primary-fixed has-[:checked]:text-on-primary-fixed">
+              <input class="hidden" name="paymentMethod" type="radio" value="wallet"/>
+              <span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+              <span class="font-label-sm text-xs mt-1">محفظة ذكية</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- زر الحفظ في Firebase -->
+        <button class="w-full mt-space-sm py-space-md rounded-full bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg font-bold flex items-center justify-center gap-space-xs shadow-lg transition-all active:scale-98 cursor-pointer" id="submitOrderBtn" type="submit">
+          <span class="material-symbols-outlined text-[22px]">check_circle</span>
+          <span>تأكيد الطلب الفوري الآن</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== نافذة تأكيد واستلام الطلب ==================== -->
+  <div class="fixed inset-0 z-50 bg-inverse-surface/80 backdrop-blur-md hidden items-center justify-center p-space-md" id="orderSuccessModal">
+    <div class="relative w-full max-w-md bg-surface-container-lowest rounded-2xl shadow-2xl p-space-xl flex flex-col items-center text-center gap-space-md animate-pop-in">
+      <div class="w-20 h-20 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center shadow-lg">
+        <span class="material-symbols-outlined text-[44px]">sentiment_very_satisfied</span>
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-widest">تم حفظ طلبك بنجاح في Firebase!</span>
+        <h3 class="font-headline-md text-xl font-bold text-on-surface">شكراً لطلبك من ديوان الضيافة</h3>
+        <p class="font-body-sm text-body-sm text-on-surface-variant max-w-sm mt-1">
+          يجري الآن تحضير الأطباق الساخنة وستكون في طريقها إليك خلال ٣٠ إلى ٤٥ دقيقة بإذن الله.
+        </p>
+      </div>
+      
+      <div class="w-full bg-surface-container-low p-space-md rounded-xl flex items-center justify-between text-on-surface font-label-md text-label-md">
+        <span>رقم تتبع الطلب:</span>
+        <span class="font-bold text-primary font-headline-sm" dir="ltr" id="orderTrackingNumber">#DWN-0000</span>
+      </div>
+
+      <div class="flex flex-col w-full gap-space-xs pt-space-xs">
+        <a class="w-full py-space-sm rounded-full bg-primary hover:bg-primary-container text-on-primary font-label-md font-bold flex items-center justify-center gap-space-xs transition-colors shadow-md" href="track.html" id="directTrackLink">
+          <span class="material-symbols-outlined text-[18px]">my_location</span>
+          <span>تتبع حالة طلبك بالوقت الفعلي</span>
+        </a>
+        <a class="w-full py-space-sm rounded-full bg-tertiary-container hover:bg-tertiary text-on-tertiary-container font-label-md font-bold flex items-center justify-center gap-space-xs transition-colors" href="#" id="whatsappFollowLink" target="_blank">
+          <span class="material-symbols-outlined text-[18px]">chat</span>
+          <span>متابعة الطلب عبر الواتساب</span>
+        </a>
+        <button class="w-full py-space-sm rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors cursor-pointer" onclick="closeSuccessModal()">
+          العودة للقائمة الرئيسية
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== تذييل الصفحة (Footer) ==================== -->
+  <footer class="w-full bg-surface-container-low mt-space-xl py-space-xl text-on-surface-variant">
+    <div class="w-full px-4 md:px-margin">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-space-lg">
+        <div class="flex flex-col gap-space-sm">
+          <div class="flex items-center gap-space-sm">
+            <div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+              <span class="material-symbols-outlined text-[18px]">restaurant</span>
+            </div>
+            <span class="font-headline-sm text-headline-sm text-primary font-bold">ديوان الضيافة</span>
+          </div>
+          <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            أشهى المأكولات العربية الأصيلة والمشاوي الفاخرة المحضرة يومياً بكل شغف وحرفية لتصلك طازجة أينما كنت.
+          </p>
+        </div>
+        <div class="flex flex-col gap-space-sm">
+          <h4 class="font-label-lg text-label-lg text-on-surface font-bold">ساعات العمل والخدمة</h4>
+          <div class="flex flex-col gap-space-xs font-body-sm text-body-sm">
+            <p class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary">schedule</span> السبت - الخميس: ١١:٠٠ ص - ٠١:٣٠ ص</p>
+            <p class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary">schedule</span> الجمعة: ٠١:٠٠ م - ٠٢:٠٠ ص</p>
+            <p class="text-secondary font-semibold">التوصيل متاح حتى آخر ساعات العمل</p>
+          </div>
+        </div>
+        <div class="flex flex-col gap-space-sm">
+          <h4 class="font-label-lg text-label-lg text-on-surface font-bold">التواصل وخدمة العملاء</h4>
+          <div class="flex flex-col gap-space-xs font-body-sm text-body-sm">
+            <p class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary">call</span> الرقم الموحد: 9200 00000</p>
+            <p class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary">mail</span> info@diwan-almona.sa</p>
+            <p class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary">pin_drop</span> طريق الملك فهد، حي العليا، الرياض</p>
+          </div>
+        </div>
+        <div class="flex flex-col gap-space-sm">
+          <h4 class="font-label-lg text-label-lg text-on-surface font-bold">روابط سريعة</h4>
+          <div class="flex flex-col gap-1 text-sm">
+            <a href="index.html" class="hover:text-primary transition-colors">قائمة الطعام الرئيسية</a>
+            <a href="cart.html" class="hover:text-primary transition-colors">سلة المشتريات</a>
+            <a href="orders.html" class="hover:text-primary transition-colors font-semibold">طلبات العملاء</a>
+            <a href="track.html" class="hover:text-primary transition-colors">تتبع حالة الطلب المباشر</a>
+            <a href="auth.html" class="hover:text-primary transition-colors">حسابي وسجل الطلبات</a>
+            <a href="admin.html" class="hover:text-primary transition-colors text-primary font-bold">لوحة تحكم إدارة المطبخ</a>
+          </div>
+        </div>
+      </div>
+      <div class="pt-space-md border-t border-outline-variant/30 flex flex-col md:flex-row items-center justify-between gap-space-sm font-label-sm text-label-sm">
+        <p>© ٢٠٢٦ ديوان الضيافة. جميع الحقوق محفوظة - متصل بقاعدة بيانات Firebase.</p>
+        <div class="flex items-center gap-space-md">
+          <a class="hover:text-primary transition-colors" href="#">الشروط والأحكام</a>
+          <a class="hover:text-primary transition-colors" href="#">سياسة الخصوصية</a>
+          <a class="hover:text-primary transition-colors" href="#">الدعم الفني</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- سكربت الصفحة الرئيسية -->
+  <script src="js/app.js"></script>
+</body>
+</html>

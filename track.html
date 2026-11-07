@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>تتبع حالة الطلب بالوقت الفعلي | ديوان الضيافة</title>
+  
+  <!-- الخطوط والأيقونات -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100..900&family=Epilogue:wght@100..900&family=Space+Grotesk:wght@100..900&display=swap" rel="stylesheet"/>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#9a4100",
+            "primary-container": "#bd5611",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#fffbff",
+            "primary-fixed": "#ffdbcb",
+            "primary-fixed-dim": "#ffb690",
+            "secondary": "#845400",
+            "secondary-container": "#fdae3d",
+            "secondary-fixed": "#ffddb6",
+            "on-secondary-fixed": "#2a1800",
+            "tertiary": "#515f57",
+            "tertiary-container": "#6a786f",
+            "tertiary-fixed": "#d7e6db",
+            "background": "#fff8f6",
+            "surface": "#fff8f6",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f9f2f0",
+            "surface-container": "#f3ecea",
+            "surface-container-high": "#ede7e5",
+            "surface-container-highest": "#e7e1df",
+            "on-surface": "#1d1b1a",
+            "on-surface-variant": "#574238",
+            "outline": "#8a7267",
+            "outline-variant": "#ddc1b3",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6"
+          },
+          spacing: {
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2.5rem",
+            "margin": "2.5rem",
+            "gutter": "1.5rem"
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- ملف التنسيق -->
+  <link rel="stylesheet" href="css/style.css"/>
+
+  <!-- مكتبات Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js"></script>
+
+  <!-- سكربتات التهيئة المشتركة -->
+  <script src="js/firebase-config.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/navbar.js"></script>
+</head>
+<body class="bg-background font-body-md text-on-surface antialiased min-h-screen flex flex-col">
+
+  <!-- ==================== رأس الصفحة ==================== -->
+  <header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_2px_12px_rgba(29,27,26,0.05)]">
+    <div class="h-28 w-full px-4 md:px-margin flex flex-col justify-between py-space-sm">
+      <div class="flex items-center justify-between gap-gutter">
+        
+        <div class="flex items-center gap-space-md">
+          <a href="index.html" class="flex items-center gap-space-sm cursor-pointer">
+            <div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary shadow-sm">
+              <span class="material-symbols-outlined text-[22px]">restaurant</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-headline-sm text-headline-sm text-primary tracking-tight font-bold">ديوان الضيافة</span>
+              <span class="font-label-sm text-label-sm text-on-surface-variant">أصيل ومميز</span>
+            </div>
+          </a>
+        </div>
+
+        <div class="flex items-center gap-space-sm">
+          <a class="hidden xl:flex items-center gap-space-xs px-space-sm py-space-xs rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-md text-label-md font-bold" href="tel:920000000">
+            <span class="material-symbols-outlined text-[18px]">call</span>
+            <span dir="ltr">9200 00000</span>
+          </a>
+
+          <!-- شارة السلة -->
+          <a href="cart.html" class="flex items-center gap-space-sm bg-primary hover:bg-primary-container text-on-primary px-space-md py-space-xs rounded-full shadow-md transition-all">
+            <div class="relative flex items-center justify-center">
+              <span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+              <span class="cart-badge-count absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-secondary text-on-secondary font-label-sm text-[10px] flex items-center justify-center font-bold">0</span>
+            </div>
+            <div class="flex items-center gap-space-xs font-label-md text-label-md">
+              <span class="hidden sm:inline font-bold">السلة</span>
+              <span class="opacity-80">|</span>
+              <span class="cart-header-total font-semibold" dir="ltr">0 ج.م</span>
+            </div>
+          </a>
+
+          <div id="navbarUserProfile" class="flex items-center gap-space-xs pr-space-xs">
+            <a href="auth.html" class="flex items-center gap-space-xs px-space-sm py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors">
+              <span class="material-symbols-outlined text-[18px] text-primary">account_circle</span>
+              <span class="hidden sm:inline font-semibold">دخول / حسابي</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- روابط التنقل -->
+      <nav class="flex items-center gap-space-xs overflow-x-auto py-space-xs scrollbar-none">
+        <a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all whitespace-nowrap" href="index.html">الرئيسية</a>
+        <a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all whitespace-nowrap" href="cart.html">السلة وإتمام الطلب</a>
+        <a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all whitespace-nowrap" href="track.html">تتبع الطلب</a>
+        <a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all whitespace-nowrap" href="orders.html">طلبات العملاء</a>
+        <a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all whitespace-nowrap" href="auth.html">حسابي وسجل الطلبات</a>
+        <a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-primary font-bold hover:bg-surface-container transition-all whitespace-nowrap flex items-center gap-1" href="admin.html">
+          <span class="material-symbols-outlined text-[16px]">admin_panel_settings</span>
+          <span>لوحة المطبخ</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ==================== محتوى صفحة التتبع ==================== -->
+  <main class="w-full pt-32 px-4 md:px-margin pb-16 flex-1 max-w-5xl mx-auto">
+    
+    <!-- حقل البحث عن رقم الطلب -->
+    <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-surface-container-high/60 mb-8">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 class="font-headline-md text-xl md:text-2xl font-bold text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-[24px]">radar</span>
+            <span>تتبع الطلب المباشر بالوقت الفعلي</span>
+          </h1>
+          <p class="text-xs text-on-surface-variant mt-1">
+            أدخل رقم طلبك لمتابعة مراحل تجهيزه وتوصيله مباشرة عبر تحديثات Firebase الحية
+          </p>
+        </div>
+
+        <form id="trackOrderForm" class="flex items-center gap-2 max-w-md w-full">
+          <div class="relative flex-1">
+            <span class="material-symbols-outlined absolute right-3 top-3 text-outline text-[18px]">tag</span>
+            <input type="text" id="trackingInput" placeholder="رقم الطلب (مثل: DWN-4892)" dir="ltr"
+                   class="w-full pr-10 pl-4 py-2.5 bg-surface-container-low rounded-xl text-sm font-bold text-right uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-primary/20 text-on-surface">
+          </div>
+          <button type="submit" class="px-6 py-2.5 bg-primary hover:bg-primary-container text-on-primary rounded-xl font-bold text-sm transition-all shadow-sm flex items-center gap-1 cursor-pointer">
+            <span class="material-symbols-outlined text-[18px]">search</span>
+            <span>بحث</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- مؤشر التحميل -->
+    <div id="trackingLoader" class="hidden py-16 text-center text-outline">
+      <span class="material-symbols-outlined animate-spin text-[48px] text-primary">sync</span>
+      <p class="mt-2 text-sm font-semibold">جاري الاستعلام عن بيانات الطلب من فيربيز...</p>
+    </div>
+
+    <!-- رسالة عدم العثور على الطلب -->
+    <div id="trackingNotFound" class="hidden py-16 text-center bg-surface-container-lowest rounded-2xl p-8 border border-dashed border-outline-variant">
+      <span class="material-symbols-outlined text-[56px] text-outline">search_off</span>
+      <h3 class="font-headline-sm text-lg font-bold text-on-surface mt-2">لم يتم العثور على هذا الطلب</h3>
+      <p class="text-on-surface-variant text-sm mt-1 max-w-md mx-auto">
+        تأكد من إدخال رقم الطلب بصورة صحيحة، أو يمكنك تصفح قائمة طعامنا وبدء طلب جديد.
+      </p>
+      <a href="index.html" class="inline-block mt-4 px-6 py-2 bg-primary text-on-primary rounded-full text-sm font-semibold">
+        العودة للقائمة
+      </a>
+    </div>
+
+    <!-- كارت تفاصيل التتبع والخطوات الحية -->
+    <div id="trackingDetailsContainer" class="hidden flex-col gap-6 animate-fade-in">
+      
+      <!-- شريط الخطوات الحية (Stepper) -->
+      <div class="bg-surface-container-lowest rounded-2xl p-6 md:p-8 shadow-sm border border-surface-container-high/60">
+        <div class="flex items-center justify-between pb-6 border-b border-surface-container-high/60 mb-6">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-bold">
+              <span class="material-symbols-outlined text-[24px]">receipt_long</span>
+            </div>
+            <div>
+              <span class="text-xs text-outline font-semibold">رقم الطلب</span>
+              <h2 id="displayOrderNumber" class="font-headline-md text-xl md:text-2xl font-bold text-primary" dir="ltr">#DWN-0000</h2>
+            </div>
+          </div>
+          <div class="flex flex-col text-left">
+            <span class="text-xs text-outline font-semibold">وقت الطلب</span>
+            <span id="displayOrderTime" class="text-sm font-bold text-on-surface">--:--</span>
+          </div>
+        </div>
+
+        <!-- الخطوات -->
+        <div class="relative flex items-center justify-between w-full mb-8 px-2 md:px-8">
+          <!-- Step 1 -->
+          <div class="flex flex-col items-center relative z-10">
+            <div id="step-1" class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold shadow-md">
+              <span id="step-icon-1" class="material-symbols-outlined text-[20px]">receipt_long</span>
+            </div>
+            <span class="text-xs font-bold text-on-surface mt-2 text-center">استلام الطلب</span>
+          </div>
+          <div id="line-1" class="flex-1 h-1 bg-surface-container-highest mx-2 transition-all duration-500"></div>
+
+          <!-- Step 2 -->
+          <div class="flex flex-col items-center relative z-10">
+            <div id="step-2" class="w-10 h-10 rounded-full bg-surface-container text-outline flex items-center justify-center font-bold">
+              <span id="step-icon-2" class="material-symbols-outlined text-[20px]">outdoor_grill</span>
+            </div>
+            <span class="text-xs font-bold text-on-surface mt-2 text-center">في المطبخ</span>
+          </div>
+          <div id="line-2" class="flex-1 h-1 bg-surface-container-highest mx-2 transition-all duration-500"></div>
+
+          <!-- Step 3 -->
+          <div class="flex flex-col items-center relative z-10">
+            <div id="step-3" class="w-10 h-10 rounded-full bg-surface-container text-outline flex items-center justify-center font-bold">
+              <span id="step-icon-3" class="material-symbols-outlined text-[20px]">delivery_dining</span>
+            </div>
+            <span class="text-xs font-bold text-on-surface mt-2 text-center">مع المندوب</span>
+          </div>
+          <div id="line-3" class="flex-1 h-1 bg-surface-container-highest mx-2 transition-all duration-500"></div>
+
+          <!-- Step 4 -->
+          <div class="flex flex-col items-center relative z-10">
+            <div id="step-4" class="w-10 h-10 rounded-full bg-surface-container text-outline flex items-center justify-center font-bold">
+              <span id="step-icon-4" class="material-symbols-outlined text-[20px]">verified</span>
+            </div>
+            <span class="text-xs font-bold text-on-surface mt-2 text-center">تم التوصيل</span>
+          </div>
+        </div>
+
+        <!-- بطاقة الحالة الحالية المباشرة -->
+        <div class="p-4 rounded-xl bg-surface-container flex items-center gap-4">
+          <div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center flex-shrink-0 animate-pulse">
+            <span class="material-symbols-outlined text-[22px]">info</span>
+          </div>
+          <div class="flex flex-col">
+            <h4 id="currentStatusTitle" class="font-headline-sm text-base font-bold text-on-surface">جاري مراجعة الطلب</h4>
+            <p id="currentStatusDesc" class="text-xs text-on-surface-variant mt-0.5">يقوم الفرع بمراجعة أصناف الطلب لبدء التجهيز</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- تفاصيل الأصناف وبيانات العميل -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- تفاصيل الأطباق والوجبات المطلوبة -->
+        <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-surface-container-high/60 flex flex-col justify-between">
+          <div>
+            <h3 class="font-headline-sm text-base font-bold text-on-surface flex items-center gap-2 pb-3 border-b border-surface-container">
+              <span class="material-symbols-outlined text-primary text-[20px]">menu_book</span>
+              <span>الأصناف المطلوبة</span>
+            </h3>
+            <div id="trackingItemsList" class="flex flex-col divide-y divide-surface-container/50 max-h-60 overflow-y-auto mt-2">
+              <!-- ترسم بواسطة track.js -->
+            </div>
+          </div>
+
+          <!-- ملخص الفاتورة -->
+          <div class="pt-4 border-t border-surface-container mt-4 flex flex-col gap-1.5 text-xs">
+            <div class="flex justify-between text-on-surface-variant">
+              <span>المجموع الفرعي:</span>
+              <span id="trackingSubtotal">0 ج.م</span>
+            </div>
+            <div class="flex justify-between text-on-surface-variant">
+              <span>التوصيل:</span>
+              <span id="trackingDeliveryFee">20 ج.م</span>
+            </div>
+            <div class="flex justify-between text-tertiary font-bold">
+              <span>الخصم:</span>
+              <span id="trackingDiscount">-0 ج.م</span>
+            </div>
+            <div class="flex justify-between text-base font-bold text-primary pt-1 border-t border-surface-container">
+              <span>الإجمالي:</span>
+              <span id="trackingTotal">0 ج.م</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- بيانات العميل والتوصيل -->
+        <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-surface-container-high/60 flex flex-col justify-between gap-4">
+          <div>
+            <h3 class="font-headline-sm text-base font-bold text-on-surface flex items-center gap-2 pb-3 border-b border-surface-container">
+              <span class="material-symbols-outlined text-primary text-[20px]">location_on</span>
+              <span>وجهة التوصيل والعميل</span>
+            </h3>
+
+            <div class="flex flex-col gap-3 mt-3 text-xs">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-outline text-[18px]">person</span>
+                <span class="text-outline">المستلم:</span>
+                <span id="trackingCustName" class="font-bold text-on-surface">--</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-outline text-[18px]">phone</span>
+                <span class="text-outline">الهاتف:</span>
+                <span id="trackingCustPhone" class="font-bold text-on-surface" dir="ltr">--</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-outline text-[18px] flex-shrink-0 mt-0.5">home</span>
+                <span class="text-outline flex-shrink-0">العنوان:</span>
+                <span id="trackingCustAddress" class="font-bold text-on-surface">--</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2 pt-4 border-t border-surface-container">
+            <a href="tel:920000000" class="w-full py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors">
+              <span class="material-symbols-outlined text-[16px] text-primary">call</span>
+              <span>الاتصال بخدمة عملاء المطعم</span>
+            </a>
+            <a href="index.html" class="w-full py-2.5 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-bold text-xs flex items-center justify-center gap-1.5 transition-colors">
+              <span class="material-symbols-outlined text-[16px]">add</span>
+              <span>طلب وجبة أخرى</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ==================== تذييل الصفحة ==================== -->
+  <footer class="w-full bg-surface-container-low mt-auto py-10 text-on-surface-variant text-center border-t border-outline-variant/30 text-xs">
+    <p>© ٢٠٢٦ ديوان الضيافة. جميع الحقوق محفوظة - تتبع مباشر مدعوم بـ Firebase.</p>
+  </footer>
+
+  <script src="js/track.js"></script>
+</body>
+</html>
